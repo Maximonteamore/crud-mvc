@@ -1,24 +1,65 @@
-.panel{
+/* Panel general */
+.panel {
     max-width: 800px;
     padding: 20px;
     margin: auto;
     background: gainsboro;
 }
 
-.text-center{
+/* Texto centrado */
+.text-center {
     text-align: center;
     color: green;
 }
-table{
+
+/* Tabla */
+table {
     width: 100%;
+    border-collapse: collapse;
 }
-table,tr,td{
+table, tr, td {
     border: 1px solid tan;
+    padding: 8px;
 }
-.btn{
+
+/* Botón base */
+.btn {
     background: green;
     color: white;
     padding: 10px 20px;
     display: inline-block;
     text-decoration: none;
+    margin-right: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Boton para cuando se desconecta la base de datos */
+.btn.disabled {
+    background: gray;
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ✅ Mensaje de éxito */
+.alert-success {
+    color: green;
+    background-color: #e6ffe6;
+    border: 1px solid green;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* ❌ Mensaje de error */
+.alert-error {
+    color: red;
+    background-color: #ffe6e6;
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
