@@ -1,0 +1,136 @@
+Resumen de la Aplicación MVC
+Esta aplicación sigue el patrón Modelo-Vista-Controlador (MVC), que es una arquitectura de software utilizada para separar los diferentes aspectos de la aplicación en tres componentes principales: el Modelo, la Vista y el Controlador.
+
+1. Estructura de Carpetas y Archivos
+La estructura básica de la aplicación es la siguiente:
+
+bash
+Copiar
+/mvc
+  /config
+    - config.php
+  /controlador
+    - index.php
+  /modelo
+    - index.php
+  /vista
+    /layouts
+      - header.php
+      - footer.php
+    - index.php
+    - nuevo.php
+    - editar.php
+  /css
+    - app.css
+  index.php
+Archivos principales:
+config.php: Contiene configuraciones globales, como la URL base del proyecto.
+index.php (raíz del proyecto): Archivo principal que gestiona las solicitudes y redirige a los métodos del controlador apropiado.
+controlador/index.php: Define la clase modeloController, que maneja las acciones de la aplicación.
+modelo/index.php: Contiene la clase Modelo, que maneja la interacción con la base de datos.
+vista/index.php: Contiene la vista principal, donde se muestran los productos.
+vista/nuevo.php: Contiene el formulario para agregar nuevos productos.
+vista/editar.php: Contiene el formulario para editar productos existentes.
+layouts/header.php y layouts/footer.php: Son archivos que contienen el encabezado y pie de página comunes para todas las vistas.
+2. Explicación del Funcionamiento de la Aplicación
+Enrutamiento en index.php (raíz del proyecto)
+El archivo index.php ubicado en la raíz de la aplicación es el encargado de gestionar las solicitudes (URLs) y redirigirlas a los métodos del controlador adecuados. Este archivo funciona de la siguiente manera:
+
+Verificación del parámetro m:
+
+Si el parámetro m está presente en la URL (?m=metodo), el código verifica si el método correspondiente existe en el controlador (modeloController).
+Si el método existe, se ejecuta. Si no existe, se muestra un mensaje de error ("Método no encontrado").
+Ejemplo de URL con parámetro m:
+
+http://localhost/mvc/?m=index → Llama al método index del controlador.
+http://localhost/mvc/?m=nuevo → Llama al método nuevo del controlador, para mostrar el formulario de nuevo producto.
+Si no se pasa el parámetro m:
+
+Si no se pasa el parámetro m en la URL, el archivo index.php llama al método index() del controlador por defecto. Este método muestra la lista de productos en la vista principal.
+Ejemplo de URL sin parámetro m:
+
+http://localhost/mvc/ → Llama al método index() por defecto y muestra la vista con la lista de productos.
+Controlador modeloController en controlador/index.php
+La clase modeloController es el controlador principal de la aplicación y tiene los métodos que gestionan las acciones de la aplicación, como mostrar, crear, editar y eliminar productos. Los métodos en este archivo son:
+
+Método index():
+
+Este método se encarga de obtener los productos de la base de datos a través del modelo y cargar la vista principal (vista/index.php) para mostrar los productos.
+Método nuevo():
+
+Muestra el formulario para agregar un nuevo producto. Este formulario se encuentra en vista/nuevo.php.
+Método guardar():
+
+Recibe los datos del formulario desde el archivo vista/nuevo.php y los inserta en la base de datos.
+Método editar():
+
+Muestra el formulario para editar un producto existente. Obtiene los datos del producto desde la base de datos (usando el modelo) y los pasa a la vista vista/editar.php.
+Método actualizar():
+
+Recibe los datos del formulario de edición y actualiza el producto correspondiente en la base de datos.
+Método eliminar():
+
+Elimina un producto de la base de datos.
+Modelo Modelo en modelo/index.php
+La clase Modelo se encarga de la interacción con la base de datos utilizando PDO. Tiene los siguientes métodos:
+
+Método insertar():
+
+Inserta un nuevo registro en la base de datos en la tabla especificada.
+Método mostrar():
+
+Recupera datos de la base de datos según una condición dada. En la vista principal, este método se usa para obtener los productos.
+Método actualizar():
+
+Actualiza un registro existente en la base de datos.
+Método eliminar():
+
+Elimina un registro de la base de datos.
+Vistas (vista/)
+Las vistas se encargan de mostrar la interfaz de usuario y son archivos PHP que contienen HTML con los datos obtenidos desde el controlador.
+
+vista/index.php:
+
+Muestra la lista de productos. Esta vista recibe los productos desde el controlador y los presenta en una tabla HTML.
+vista/nuevo.php:
+
+Muestra un formulario para ingresar un nuevo producto. El formulario envía los datos al controlador para ser procesados.
+vista/editar.php:
+
+Muestra un formulario para editar un producto existente. Los datos actuales del producto se cargan en el formulario, y al enviarlo, los datos se actualizan en la base de datos.
+Archivos de Diseño (layouts/)
+header.php y footer.php:
+Estos archivos contienen el encabezado y el pie de página comunes a todas las vistas. Se incluyen al inicio y al final de cada vista (index.php, nuevo.php, editar.php).
+3. Flujo de Trabajo en la Aplicación
+El usuario accede a http://localhost/mvc/ o a una URL con el parámetro m.
+
+El archivo index.php (raíz) recibe la solicitud y verifica si existe el parámetro m:
+
+Si el parámetro m está presente, ejecuta el método correspondiente en el controlador (modeloController).
+Si no se pasa el parámetro m, llama al método index() por defecto, que carga la lista de productos.
+El controlador (modeloController) interactúa con el modelo para obtener los datos de la base de datos y pasa esos datos a las vistas para ser mostrados.
+
+Las vistas muestran los datos al usuario (como una lista de productos, formularios para agregar/editar productos, etc.).
+
+El flujo de los datos es controlado a través de la base de datos, y los resultados de las operaciones (insertar, editar, eliminar) se reflejan en las vistas.
+
+4. Configuración Global (config.php)
+El archivo config.php contiene configuraciones globales, como la URL base de la aplicación. Esta configuración es utilizada en las redirecciones y en el manejo de las URLs dentro de la aplicación.
+
+Ejemplo de config.php:
+
+php
+Copiar
+<?php
+define("urlsite", "http://localhost/mvc/");  // URL base del proyecto
+?>
+5. CSS (app.css)
+El archivo app.css contiene los estilos que se aplican a las vistas de la aplicación. Esto incluye estilos para las tablas, botones y otros elementos HTML.
+
+Conclusión
+Esta aplicación sigue el patrón MVC, donde:
+
+Modelo: Maneja la interacción con la base de datos.
+Vista: Muestra la información al usuario.
+Controlador: Gestiona la lógica de negocio y las interacciones entre el modelo y la vista.
+La estructura de archivos y el flujo de trabajo están organizados de forma que facilita la expansión y mantenimiento del proyecto, permitiendo separar claramente la lógica de negocio, la interfaz de usuario y el manejo de datos.
