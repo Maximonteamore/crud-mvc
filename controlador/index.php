@@ -16,7 +16,7 @@ class modeloController{
 
             static function index() {
                 $producto = new Modelo();
-                $conexion = $producto->conectar();
+                $conexion = $producto->conectar();//
             
                 if ($conexion === true) {
                     $dato = $producto->mostrar("productos", "1=1");
@@ -48,19 +48,20 @@ class modeloController{
 
         $data = "'".$nombre."',".$precio;
         $producto = new Modelo();
+        $conexion = $producto->conectar();
+
         $resultado = $producto->insertar("productos", $data);
 
-        if ($resultado) {
-            header("location:".urlsite."?m=index&mensaje=ok_guardar");
-        } else {
-            header("location:".urlsite."?m=nuevo&mensaje=error_guardar");
-        }
+        $resultado ? header("location:".urlsite."?m=index&mensaje=ok_guardar") : header("location:".urlsite."?m=nuevo&mensaje=error_guardar");
+        
     }
 
     //editar
     static function editar(){
         $id = $_REQUEST['id'];
         $producto = new Modelo();
+        $producto = new Modelo();
+        $conexion = $producto->conectar();
         $dato = $producto->mostrar("productos","id=".$id);
         if (!empty($dato)) {
             require_once("vista/editar.php");
@@ -83,14 +84,13 @@ class modeloController{
 
     $data = "nombre='".$nombre."',precio=".$precio;
     $producto = new Modelo();
+    $producto = new Modelo();
+    $conexion = $producto->conectar();
     $resultado = $producto->actualizar("productos", $data, "id=".$id);
 
-    if ($resultado) {
-        header("location:".urlsite."?m=index&mensaje=ok_actualizar");
-    } else {
-        header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_actualizar");
-    }
-}
+     $resultado ? header("location:".urlsite."?m=index&mensaje=ok_actualizar") :   header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_actualizar");
+    
+  }
 
 
     //eliminar
@@ -103,14 +103,12 @@ class modeloController{
 
     $id = (int) $_REQUEST['id'];
     $producto = new Modelo();
+    $conexion = $producto->conectar();
     $resultado = $producto->eliminar("productos", "id=".$id);
 
-    if ($resultado) {
-        header("location:".urlsite."?m=index&mensaje=ok_eliminar");
-    } else {
-        header("location:".urlsite."?m=index&mensaje=error_eliminar");
-    }
-}
+    $resultado ? header("location:".urlsite."?m=index&mensaje=ok_eliminar") :header("location:".urlsite."?m=index&mensaje=error_eliminar");
+
+ }
 
 
 
