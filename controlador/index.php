@@ -1,10 +1,12 @@
 <?php
-require_once("modelo/index.php");//traigo el modelo la conexion a la base de datos y sus funciones.
+require_once("modelo/index.php");//traigo el modelo y la conexion a la base de datos y sus funciones.
 
 class modeloController{
+
     private $model;
+
     public function __construct(){
-        $this->model= new Modelo();//hago la conecxion  a la bd que esta en Modelo creo una instancia y la reutilizo aca
+        $this->model= new Modelo();
     }
             //funcion que muestra los datos de la BD y carga en pagina principal,si no hay datos lo carga vacio.
             static function index() {
@@ -60,15 +62,17 @@ class modeloController{
             //caputaro las variables.
             $nombre = trim($_REQUEST['nombre']);
             $precio = $_REQUEST['precio'];
+            $stock = $_REQUEST['stock'];
 
          //Validaciones de datos, vacios o no numerico.
-        if (empty($nombre) || !is_numeric($precio)) {
+        if (empty($nombre) || !is_numeric($precio) || !is_numeric($stock) ) {
             header("location:".urlsite."?m=nuevo&mensaje=error_datos");
             return;
         }
 
         //armo consulta y envio.
-        $data = "'".$nombre."',".$precio;
+        $data = "'".$nombre."',".$precio.",".$stock;
+
         $resultado = $producto->insertar("productos", $data);
 
         //controlo si fue exitoso la insercion.
@@ -115,16 +119,18 @@ class modeloController{
     $id = $_REQUEST['id'];
     $nombre = trim($_REQUEST['nombre']);
     $precio = $_REQUEST['precio'];
+    $stock = $_REQUEST['stock'];
 
-    if (empty($id) || empty($nombre) || !is_numeric($precio)) {
+    if (empty($id) || empty($nombre) || !is_numeric($precio) || !is_numeric($stock)) {
         header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_datos");
         return;
     }
 
-    $data = "nombre='".$nombre."',precio=".$precio;
+    $data = "nombre='".$nombre."', precio=".$precio.", stock=".$stock;
+
     $resultado = $producto->actualizar("productos", $data, "id=".$id);
 
-     $resultado ? header("location:".urlsite."?m=index&mensaje=ok_actualizar") :   header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_actualizar");
+     $resultado ? header("location:".urlsite."?m=index&mensaje=ok_actualizar") : header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_actualizar");
     
   }
 
