@@ -6,62 +6,91 @@ class modeloController{
     public function __construct(){
         $this->model= new Modelo();//hago la conecxion  a la bd que esta en Modelo creo una instancia y la reutilizo aca
     }
-    //muestro registro,index es inicio aca llamo a modelo que es quien maneja todo en la base de datos aca lo llamo con parametros
-        static function indexsd(){
-                $producto = new Modelo();//creo una instancia de Modelo y uso sus metodos.
-                $dato = $producto->mostrar("productos","1=1");//guardo en dato lo que me trae la funcion mostrar,"1=1"condicion valida "universal"
-                require_once("vista/index.php");//muestro la vista
-
-            }
-
+            //funcion que muestra los datos de la BD y carga en pagina principal,si no hay datos lo carga vacio.
             static function index() {
-                $producto = new Modelo();
-                $conexion = $producto->conectar();//
+
+                $producto = new Modelo();//creo una instancia de Modelo y uso sus metodos.
+                $conexion = $producto->conectar();//conecto a la BD.
             
+                //control de conexion a la BD.
                 if ($conexion === true) {
-                    $dato = $producto->mostrar("productos", "1=1");
+                    $dato = $producto->mostrar("productos", "1=1");//guardo en dato lo que me trae la funcion mostrar,"1=1"condicion valida "universal"
                     $mensaje_db = null;
+
                 } else {
-                    // Falló la conexión
-                    $dato = []; // No hay datos
-                    $mensaje_db = $conexion; // Guardamos el mensaje de error para mostrarlo en la vista
+                    //Falló la conexión.
+                    $dato = []; //No hay datos.
+                    $mensaje_db = $conexion; //Guarda el mensaje de error para mostrarlo en la vista.
                 }
-            
-                require_once("vista/index.php");
+                   
+                require_once("vista/index.php");//retorno la vista.
             }
 
-            //retorno la visa.
+            //
         static function nuevo(){
+
+            $producto = new Modelo();
+            $conexion = $producto->conectar();
+            
+            //control de conexion a la BD.
+            if ($conexion !== true) {
+                $mensaje_db = $conexion; //Guardo el error de conexión.
+                $form_habilitado = false;
+            } else {
+                $mensaje_db = null;
+                $form_habilitado = true;
+            }
             require_once("vista/nuevo.php");//muestro la vista
 
         }
 
+        //funcion que guarda los datos recibidos en los parametros,control de conexion y de insercion.
         static function guardar(){
-        $nombre = trim($_REQUEST['nombre']);
-        $precio = $_REQUEST['precio'];
 
-        // Validaciones básicas
+            $producto = new Modelo();
+            $conexion = $producto->conectar();
+        
+            //control de conexion a la BD.
+            if ($conexion !== true) {
+                //Si la conexión falló, redirigimos con mensaje de error.
+                header("location:".urlsite."?m=nuevo&mensaje=error_conexion");
+                return;
+            }
+
+            //caputaro las variables.
+            $nombre = trim($_REQUEST['nombre']);
+            $precio = $_REQUEST['precio'];
+
+         //Validaciones de datos, vacios o no numerico.
         if (empty($nombre) || !is_numeric($precio)) {
             header("location:".urlsite."?m=nuevo&mensaje=error_datos");
             return;
         }
 
+        //armo consulta y envio.
         $data = "'".$nombre."',".$precio;
-        $producto = new Modelo();
-        $conexion = $producto->conectar();
-
         $resultado = $producto->insertar("productos", $data);
 
+        //controlo si fue exitoso la insercion.
         $resultado ? header("location:".urlsite."?m=index&mensaje=ok_guardar") : header("location:".urlsite."?m=nuevo&mensaje=error_guardar");
         
     }
 
-    //editar
+   //funcion para editar recibe un id como parametro y busca en la BD.
     static function editar(){
-        $id = $_REQUEST['id'];
-        $producto = new Modelo();
+
         $producto = new Modelo();
         $conexion = $producto->conectar();
+    
+        if ($conexion !== true) {
+            //Si la conexion fallo, redirigimos con mensaje de error.
+            header("location:".urlsite."?m=nuevo&mensaje=error_conexion");
+            return;
+        }
+
+        $id = $_REQUEST['id'];
+        
+        
         $dato = $producto->mostrar("productos","id=".$id);
         if (!empty($dato)) {
             require_once("vista/editar.php");
@@ -71,8 +100,18 @@ class modeloController{
 
     }
 
-    //actualiza
+    //funcion que actualiza los datos que llegan por parametros de la vista,control de conexion y de actualizacion.
     static function actualizar(){
+
+        $producto = new Modelo();
+        $conexion = $producto->conectar();
+    
+        if ($conexion !== true) {
+            //Si la conexion fallo, redirigimos con mensaje de error.
+            header("location:".urlsite."?m=nuevo&mensaje=error_conexion");
+            return;
+        }
+
     $id = $_REQUEST['id'];
     $nombre = trim($_REQUEST['nombre']);
     $precio = $_REQUEST['precio'];
@@ -83,9 +122,6 @@ class modeloController{
     }
 
     $data = "nombre='".$nombre."',precio=".$precio;
-    $producto = new Modelo();
-    $producto = new Modelo();
-    $conexion = $producto->conectar();
     $resultado = $producto->actualizar("productos", $data, "id=".$id);
 
      $resultado ? header("location:".urlsite."?m=index&mensaje=ok_actualizar") :   header("location:".urlsite."?m=editar&id=".$id."&mensaje=error_actualizar");
@@ -93,17 +129,26 @@ class modeloController{
   }
 
 
-    //eliminar
+    //funcion eliminar recibe un id como parametro,control de conexion y de eliminacion.
     static function eliminar(){
+
+        $producto = new Modelo();
+        $conexion = $producto->conectar();
+    
+        if ($conexion !== true) {
+            //Si la conexion fallo, redirigimos con mensaje de error.
+            header("location:".urlsite."?m=nuevo&mensaje=error_conexion");
+            return;
+        }
+
     if (!isset($_REQUEST['id']) || !is_numeric($_REQUEST['id'])) {
-        // ID inválido
+        //ID invalido
         header("location:".urlsite."?m=index&mensaje=error_id_invalido");
         return;
     }
 
     $id = (int) $_REQUEST['id'];
-    $producto = new Modelo();
-    $conexion = $producto->conectar();
+  
     $resultado = $producto->eliminar("productos", "id=".$id);
 
     $resultado ? header("location:".urlsite."?m=index&mensaje=ok_eliminar") :header("location:".urlsite."?m=index&mensaje=error_eliminar");

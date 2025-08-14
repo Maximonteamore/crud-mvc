@@ -19,6 +19,11 @@ class Modelo{ //es generico puedo utilizarlo para cualquier tabla de la base de 
         }
     }
 
+    public function desconectar() {
+        $this->db = null;
+    }
+    
+
     //funcion para insertar datos a la tabla, recibe la tabla a la cual quiera insertar y los datos si inserta,
     //devuelve true si pudo insertar y falso si no pudo insertar los datos.
     public function insertar($tabla,$data){

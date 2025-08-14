@@ -2,21 +2,7 @@
 require_once("layouts/header.php");
 ?>
 
-<!-- ✅ BLOQUE DE MENSAJES -->
-<?php if (isset($_GET['mensaje'])): ?>
-    <?php
-        $mensajes = [
-            'error_datos' => '⚠️ Datos inválidos. Revisá el nombre y el precio.',
-            'error_actualizar' => '❌ Error al actualizar el producto.',
-            'error_id_invalido' => '⚠️ ID inválido. No se encontró el producto.'
-        ];
-        $tipo = strpos($_GET['mensaje'], 'ok_') === 0 ? 'success' : 'error';
-    ?>
-    <p class="alert-<?= $tipo ?>">
-        <?= $mensajes[$_GET['mensaje']] ?? '' ?>
-    </p>
-    <?php endif; ?>
-
+<?php if (empty($mensaje_db)): ?>
 <h1 class="tex.center">EDITAR</h1>
     <form action="" method="get">
      <?php
@@ -44,6 +30,9 @@ require_once("layouts/header.php");
 <input type="submit" class="btn" name="btn" value="VOLVER">  
 <input type="hidden" name="m" value="index">
 </form>
+
+<?php endif; ?>
+
 <?php
 require_once("layouts/footer.php");
 ?>
